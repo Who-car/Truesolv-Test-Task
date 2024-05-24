@@ -1,0 +1,20 @@
+{
+  "name": "truesolv",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Who-car/Truesolv-Test-Task.git"
+  },
+  "private": true,
+  "devDependencies": {
+    "lwc": "^6.6.3"
+  },
+  "dependencies": {
+    "@salesforce/apex": "^0.0.21"
+  }
+}

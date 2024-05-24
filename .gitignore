@@ -25,3 +25,6 @@ replay_pid*
 
 # IntelliJ IDEA cache output
 *.idea/
+
+node_modules/
+.apex/

@@ -1,0 +1,147 @@
+<template>
+    <div class="slds-card">
+        <!-- Header Section -->
+        <div class="slds-page-header">
+            <div class="slds-page-header__row">
+                <!-- Title Section -->
+                <div class="slds-page-header__col-title">
+                    <div class="slds-media">
+                        <div class="slds-media__body">
+                            <div class="slds-page-header__name">
+                                <div class="slds-page-header__name-title">
+                                    <h1>
+                                        <template if:true={user}>
+                                            <span>{user.Name}</span>
+                                            <span class="slds-page-header__title slds-truncate" title="User ID: {user.Id}">ID: {user.Id}</span>
+                                        </template>
+                                    </h1>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <!-- Actions Section -->
+                <div class="slds-page-header__col-actions">
+                    <div class="slds-page-header__controls">
+                        <div class="slds-page-header__control">
+                            <lightning-button label="Create Product" class="slds-m-left_x-small"></lightning-button>
+                            <lightning-button label="Open Cart" class="slds-m-left_x-small"></lightning-button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="slds-grid slds-gutters slds-wrap">
+        <!-- Filter Section -->
+        <div class="slds-col slds-size_1-of-3 slds-p-around_medium slds-box">
+            <!-- Filters for search -->
+            <lightning-card title="Filters">
+                <div class="slds-m-around_medium">
+                    <div class="slds-form-element slds-m-bottom_medium">
+                        <label class="slds-form-element__label" for="type-filter">Type</label>
+                        <div class="slds-form-element__control">
+                            <lightning-combobox
+                                    name="type-filter"
+                                    placeholder="Select Type"
+                                    options={typeOptions}
+                                    value={selectedType}
+                                    onchange={handleTypeChange}
+                                    multiple
+                            ></lightning-combobox>
+                        </div>
+                    </div>
+                    <div class="slds-form-element">
+                        <label class="slds-form-element__label" for="family-filter">Family</label>
+                        <div class="slds-form-element__control">
+                            <lightning-combobox
+                                    name="family-filter"
+                                    placeholder="Select Family"
+                                    options={familyOptions}
+                                    value={selectedFamily}
+                                    onchange={handleFamilyChange}
+                                    multiple
+                            ></lightning-combobox>
+                        </div>
+                    </div>
+                </div>
+            </lightning-card>
+        </div>
+
+<!--        <div class="slds-col slds-size_2-of-3 slds-p-around_medium slds-box">-->
+<!--            <lightning-card title="Search Products">-->
+<!--                <div class="slds-m-around_medium">-->
+<!--                    <lightning-input-->
+<!--                            label="Search"-->
+<!--                            placeholder="Search..."-->
+<!--                            onchange={handleSearch}-->
+<!--                    ></lightning-input>-->
+<!--                </div>-->
+<!--            </lightning-card>-->
+
+<!--            <div class="slds-m-around_medium">-->
+<!--                <template for:each={products} for:item="product">-->
+<!--                    <lightning-card key={product.id} class="slds-m-bottom_medium">-->
+<!--                        <div class="slds-grid">-->
+<!--                            <div class="slds-col slds-size_1-of-4">-->
+<!--                                <template if:true={product.image}>-->
+<!--                                    <img src={product.image} alt={product.name} class="slds-m-bottom_small"/>-->
+<!--                                </template>-->
+<!--                                <template if:false={product.image}>-->
+<!--                                    <img src={product.image} alt={product.name} class="slds-m-bottom_small"/>-->
+<!--                                    <p>You need to send a request to http://www.glyffix.com/api/Image?word={product.name}</p>-->
+<!--                                </template>-->
+<!--                            </div>-->
+<!--                            <div class="slds-col slds-size_3-of-4">-->
+<!--                                <h2>{product.name}</h2>-->
+<!--                                <p>{product.description}</p>-->
+<!--                                <div class="slds-m-top_small">-->
+<!--                                    <lightning-button label="Details" class="slds-m-right_x-small"></lightning-button>-->
+<!--                                    <lightning-button label="Add to cart"></lightning-button>-->
+<!--                                </div>-->
+<!--                            </div>-->
+<!--                        </div>-->
+<!--                    </lightning-card>-->
+<!--                </template>-->
+<!--            </div>-->
+<!--        </div>-->
+        <!-- Search Results Section -->
+        <div class="slds-col slds-size_2-of-3 slds-p-around_medium slds-box">
+            <!-- Search and results will be displayed here -->
+            <lightning-card title="Search Products">
+                <div class="slds-m-around_medium">
+                    <lightning-input
+                            label="Search"
+                            placeholder="Search..."
+                            onchange={handleSearch}
+                    ></lightning-input>
+                </div>
+            </lightning-card>
+
+            <div class="slds-grid slds-wrap">
+                <template for:each={products} for:item="product">
+                    <div key={product.id} class="slds-col slds-size_1-of-2">
+                        <lightning-card class="slds-m-bottom_medium">
+                            <div class="slds-p-around_medium">
+                                <template if:true={product.image}>
+                                    <img src={product.image} alt={product.name} class="slds-m-bottom_small"/>
+                                </template>
+                                <template if:false={product.image}>
+                                    <img src="http://www.glyffix.com/api/Image?word={product.name}" alt={product.name} class="slds-m-bottom_small"/>
+                                </template>
+                                <h2 class="slds-text-heading_medium">{product.name}</h2>
+                                <p>{product.description}</p>
+                                <div class="slds-m-top_small">
+                                    <lightning-button label="Details" class="slds-m-right_x-small"></lightning-button>
+                                    <lightning-button label="Add to cart"></lightning-button>
+                                </div>
+                            </div>
+                        </lightning-card>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </div>
+</template>

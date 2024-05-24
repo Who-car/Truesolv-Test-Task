@@ -1,0 +1,22 @@
+.slds-box {
+    border: 1px solid #d8dde6;
+    border-radius: 0.25rem;
+}
+
+.slds-page-header {
+    background-color: #f3f2f2;
+    padding: 1rem;
+    border-bottom: 1px solid #d8dde6;
+}
+
+.slds-m-bottom_medium {
+    margin-bottom: 1rem;
+}
+
+.slds-m-around_medium {
+    margin: 1rem;
+}
+
+.slds-card {
+    margin-bottom: 1rem;
+}
