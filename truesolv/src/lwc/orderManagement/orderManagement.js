@@ -6,12 +6,6 @@ export default class OrderManagement extends LightningElement {
     error;
     searchQuery = '';
 
-    @track products = [
-        { id: 1, name: 'Product 1', description: 'Description of Product 1', image: 'https://via.placeholder.com/150' },
-        { id: 2, name: 'Product 2', description: 'Description of Product 2', image: '' },
-        { id: 3, name: 'Product 3', description: 'Description of Product 3', image: 'https://via.placeholder.com/150' }
-    ];
-
     // Options for Type and Family filters
     typeOptions = [
         { label: 'Electronics', value: 'electronics' },
