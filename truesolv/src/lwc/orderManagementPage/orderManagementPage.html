@@ -1,0 +1,27 @@
+<template>
+    <!--TODO: настроить error везде-->
+    <c-header-component onopenmodal={openModal}></c-header-component>
+    <div class="slds-grid slds-gutters slds-wrap">
+        <div class="slds-col slds-size_1-of-3 slds-p-around_medium slds-box">
+            <c-filter-section-component></c-filter-section-component>
+        </div>
+
+        <div class="slds-col slds-size_2-of-3 slds-p-around_medium slds-box">
+            <!--TODO: передавать функции search-->
+            <c-search-component></c-search-component>
+
+            <div class="slds-grid slds-wrap">
+                <template for:each={products} for:item="product">
+                    <div key={product.Name__c} class="slds-col slds-size_1-of-2 slds-p-around_small">
+                        <c-product-card-component product={product} onproductdeleted={handleProductDeleted}></c-product-card-component>
+                    </div>
+                </template>
+            </div>
+        </div>
+    </div>
+
+
+    <template if:true={isModalOpen}>
+       <c-product-create-modal-component onclosemodal={closeModal}></c-product-create-modal-component>
+    </template>
+</template>
