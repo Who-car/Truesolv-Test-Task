@@ -19,4 +19,8 @@ export default class HeaderComponent extends LightningElement {
     handleOpenModal() {
         this.dispatchEvent(new CustomEvent('openmodal'));
     }
+
+    handleOpenCart() {
+        this.dispatchEvent(new CustomEvent('opencart'));
+    }
 }

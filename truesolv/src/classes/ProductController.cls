@@ -5,6 +5,43 @@ public class ProductController {
     }
 
     @AuraEnabled(Cacheable=true)
+    public static List<Product__c> getAllFilteredProducts(String searchQuery) {
+        String searchPattern = '%' + searchQuery + '%';
+        return [SELECT Name__c, Description__c, Type__c, Family__c, Image__c, Price__c
+        FROM Product__c
+        WHERE Name__c LIKE :searchPattern OR Description__c LIKE :searchPattern];
+    }
+
+    @AuraEnabled(Cacheable=true)
+    public static String fetchProductImage(String productName) {
+        System.debug('executing fetch product');
+        Http http = new Http();
+        HttpRequest request = new HttpRequest();
+        request.setEndpoint('http://www.glyffix.com/api/Image?word=' + EncodingUtil.urlEncode(productName, 'UTF-8'));
+        request.setMethod('GET');
+
+        try {
+            HttpResponse response = http.send(request);
+            if (response.getStatusCode() == 200) {
+                Map<String, Object> responseBody = (Map<String, Object>) JSON.deserializeUntyped(response.getBody());
+                if (responseBody.containsKey('data')) {
+                    List<Object> dataList = (List<Object>) responseBody.get('data');
+                    if (!dataList.isEmpty()) {
+                        Map<String, Object> firstImage = (Map<String, Object>) dataList.get(0);
+                        if (firstImage.containsKey('imageurl')) {
+                            return (String) firstImage.get('imageurl');
+                        }
+                    }
+                }
+            }
+        } catch (Exception e) {
+            System.debug('Error fetching product image: ' + e.getMessage());
+        }
+
+        return 'https://yandex.ru/images/search?pos=0&from=tabbar&img_url=https%3A%2F%2Fexima-online.net%2Ftemplates%2FLiveCast%2Fdleimages%2Fno_image.jpg&text=no+image+png&rpt=simage&lr=43';
+    }
+
+    @AuraEnabled(Cacheable=true)
     public static Map<String, List<String>> getPicklistValues() {
         Map<String, List<String>> picklistValues = new Map<String, List<String>>();
 
@@ -52,28 +89,5 @@ public class ProductController {
         } catch (Exception e) {
             throw new AuraHandledException('Error deleting product: ' + e.getMessage());
         }
-    }
-
-    @AuraEnabled(Cacheable=true)
-    public static String fetchImageUrl(String productName) {
-        String imageUrl = '';
-        try {
-            Http http = new Http();
-            HttpRequest request = new HttpRequest();
-            request.setEndpoint('http://www.glyffix.com/api/Image?word=' + EncodingUtil.urlEncode(productName, 'UTF-8'));
-            request.setMethod('GET');
-            HttpResponse response = (HttpResponse) http.send(request);
-            if (response.getStatusCode() == 200) {
-                Map<String, Object> jsonResponse = (Map<String, Object>) JSON.deserializeUntyped(response.getBody());
-                List<Object> data = (List<Object>) jsonResponse.get('data');
-                if (!data.isEmpty()) {
-                    Map<String, Object> firstItem = (Map<String, Object>) data.get(0);
-                    imageUrl = (String) firstItem.get('imageurl');
-                }
-            }
-        } catch (Exception e) {
-            System.debug('Error fetching image URL: ' + e.getMessage());
-        }
-        return imageUrl;
     }
 }

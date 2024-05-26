@@ -1,14 +1,13 @@
 <template>
     <!--TODO: настроить error везде-->
-    <c-header-component onopenmodal={openModal}></c-header-component>
+    <c-header-component onopenmodal={openModal} onopencart={openCart}></c-header-component>
     <div class="slds-grid slds-gutters slds-wrap">
         <div class="slds-col slds-size_1-of-3 slds-p-around_medium slds-box">
             <c-filter-section-component></c-filter-section-component>
         </div>
 
         <div class="slds-col slds-size_2-of-3 slds-p-around_medium slds-box">
-            <!--TODO: передавать функции search-->
-            <c-search-component></c-search-component>
+            <c-search-component onsearch={handleSearch}></c-search-component>
 
             <div class="slds-grid slds-wrap">
                 <template for:each={products} for:item="product">
@@ -23,5 +22,9 @@
 
     <template if:true={isModalOpen}>
        <c-product-create-modal-component onclosemodal={closeModal}></c-product-create-modal-component>
+    </template>
+    <template if:true={isCartOpen}>
+        <!--TODO: Cart panel code goes in here-->
+        <c-cart-panel-component onclosecart={closeCart}></c-cart-panel-component>
     </template>
 </template>

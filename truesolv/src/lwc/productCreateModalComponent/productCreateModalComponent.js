@@ -7,7 +7,7 @@ export default class ProductCreateModalComponent extends LightningElement {
     @track typeOptions = [];
     @track familyOptions = [];
     @track newProduct = {
-        Name: '',
+        Name__c: '',
         Description__c: '',
         Type__c: '',
         Family__c: '',
@@ -44,8 +44,7 @@ export default class ProductCreateModalComponent extends LightningElement {
             image: this.newProduct.Image__c
         })
             .then(product => {
-                // this.modalClose(product);
-                this.dispatchEvent(new CustomEvent('closemodal', { product: product }));
+                this.dispatchEvent(new CustomEvent('closemodal', { detail: product }));
                 this.resetNewProduct();
             })
             .catch(error => {

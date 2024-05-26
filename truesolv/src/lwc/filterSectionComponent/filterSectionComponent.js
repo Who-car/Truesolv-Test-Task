@@ -19,10 +19,10 @@ export default class FilterSectionComponent extends LightningElement {
     }
 
     handleTypeChange(event) {
-        this.selectedTypes = event.detail.value;
+        this.selectedTypes = [...this.selectedTypes, event.detail.value];
     }
 
     handleFamilyChange(event) {
-        this.selectedFamilies = event.detail.value;
+        this.selectedFamilies = [...this.selectedFamilies, event.detail.value];
     }
 }

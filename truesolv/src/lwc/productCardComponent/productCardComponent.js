@@ -1,11 +1,20 @@
 import {LightningElement, api, track, wire} from 'lwc';
 import isCurrentUserManager from '@salesforce/apex/UserController.isCurrentUserManager';
 import deleteProduct from '@salesforce/apex/ProductController.deleteProduct';
+import fetchProductImage from '@salesforce/apex/ProductController.fetchProductImage';
 import {ShowToastEvent} from "lightning/platformShowToastEvent";
 
 export default class ProductCardComponent extends LightningElement {
-    @api product;
     @track isManager = false;
+    @track data;
+    @api
+    get product() {
+        return this.data;
+    }
+
+    set product(value) {
+        this.data = {...value};
+    }
 
     @wire(isCurrentUserManager)
     wiredIsManager({ error, data }) {
@@ -16,8 +25,19 @@ export default class ProductCardComponent extends LightningElement {
         }
     }
 
+    async connectedCallback() {
+        if (!this.data.Image__c) {
+            fetchProductImage({productName: this.data.Name__c})
+                .then(result => {
+                    this.data.Image__c = result;
+                    // this.template.querySelector('.product-image').src = result;
+                })
+                .catch(error => console.log('error in js: ', error.toString()))
+        }
+    }
+
     handleDelete() {
-        deleteProduct({ productId: this.product.Id })
+        deleteProduct({ productId: this.data.Id })
             .then(() => {
                 this.dispatchEvent(
                     new ShowToastEvent({
@@ -26,7 +46,7 @@ export default class ProductCardComponent extends LightningElement {
                         variant: 'success',
                     })
                 );
-                this.dispatchEvent(new CustomEvent('productdeleted', { detail: this.product.Id }));
+                this.dispatchEvent(new CustomEvent('productdeleted', { detail: this.data.Id }));
             })
             .catch(error => {
                 this.dispatchEvent(
