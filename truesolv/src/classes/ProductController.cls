@@ -5,12 +5,34 @@ public class ProductController {
     }
 
     @AuraEnabled(Cacheable=true)
-    public static List<Product__c> getAllFilteredProducts(String searchQuery) {
-        String searchPattern = '%' + searchQuery + '%';
-        return [SELECT Name__c, Description__c, Type__c, Family__c, Image__c, Price__c
-        FROM Product__c
-        WHERE Name__c LIKE :searchPattern OR Description__c LIKE :searchPattern];
+    public static List<Product__c> getAllFilteredProducts(String searchQuery, Map<String, String> filters) {
+        String searchPattern = '%' + String.escapeSingleQuotes(searchQuery) + '%';
+        List<String> queryParts = new List<String>();
+
+        String query = 'SELECT Id, Name__c, Description__c, Type__c, Family__c, Image__c, Price__c FROM Product__c';
+
+        if (String.isNotBlank(searchQuery)) {
+            queryParts.add('(Name__c LIKE \'' + searchPattern + '\' OR Description__c LIKE \'' + searchPattern + '\')');
+        }
+
+        if (filters != null && !filters.isEmpty()) {
+            if (filters.containsKey('Type__c') && String.isNotBlank(filters.get('Type__c'))) {
+                queryParts.add('Type__c = \'' + String.escapeSingleQuotes(filters.get('Type__c')) + '\'');
+            }
+            if (filters.containsKey('Family__c') && String.isNotBlank(filters.get('Family__c'))) {
+                queryParts.add('Family__c = \'' + String.escapeSingleQuotes(filters.get('Family__c')) + '\'');
+            }
+        }
+
+        if (!queryParts.isEmpty()) {
+            query += ' WHERE ' + String.join(queryParts, ' AND ');
+        }
+
+        System.debug('Final query: ' + query);
+
+        return Database.query(query);
     }
+
 
     @AuraEnabled(Cacheable=true)
     public static String fetchProductImage(String productName) {
@@ -48,13 +70,11 @@ public class ProductController {
         List<String> typeValues = new List<String>();
         List<String> familyValues = new List<String>();
 
-        // Get the picklist values for Type__c
         Schema.DescribeFieldResult typeField = Product__c.Type__c.getDescribe();
         for (Schema.PicklistEntry entry : typeField.getPicklistValues()) {
             typeValues.add(entry.getValue());
         }
 
-        // Get the picklist values for Family__c
         Schema.DescribeFieldResult familyField = Product__c.Family__c.getDescribe();
         for (Schema.PicklistEntry entry : familyField.getPicklistValues()) {
             familyValues.add(entry.getValue());

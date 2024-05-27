@@ -3,21 +3,35 @@
     <c-header-component onopenmodal={openModal} onopencart={openCart}></c-header-component>
     <div class="slds-grid slds-gutters slds-wrap">
         <div class="slds-col slds-size_1-of-3 slds-p-around_medium slds-box">
-            <c-filter-section-component></c-filter-section-component>
+            <c-filter-section-component onfilterchange={handleFilterChange}></c-filter-section-component>
         </div>
 
         <div class="slds-col slds-size_2-of-3 slds-p-around_medium slds-box">
             <c-search-component onsearch={handleSearch}></c-search-component>
 
             <div class="slds-grid slds-wrap">
-                <template for:each={products} for:item="product">
-                    <div key={product.Name__c} class="slds-col slds-size_1-of-2 slds-p-around_small">
-                        <c-product-card-component
-                                product={product}
-                                onproductdeleted={handleProductDeleted}
-                                onaddtocart={handleAddToCart}>
-                        </c-product-card-component>
-                    </div>
+                <template if:true={products.length}>
+                    <template if:true={isLoading}>
+                        <div class="slds-spinner_container">
+                            <div role="status" class="slds-spinner slds-spinner_medium">
+                                <span class="slds-assistive-text">Loading</span>
+                                <div class="slds-spinner__dot-a"></div>
+                                <div class="slds-spinner__dot-b"></div>
+                            </div>
+                        </div>
+                    </template>
+                    <template for:each={products} for:item="product">
+                        <div key={product.Id} class="slds-col slds-size_1-of-2 slds-p-around_small">
+                            <c-product-card-component
+                                    product={product}
+                                    onproductdeleted={handleProductDeleted}
+                                    onaddtocart={handleAddToCart}>
+                            </c-product-card-component>
+                        </div>
+                    </template>
+                </template>
+                <template if:false={products.length}>
+                    <h1>No products found :(</h1>
                 </template>
             </div>
         </div>

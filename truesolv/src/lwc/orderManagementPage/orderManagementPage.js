@@ -1,15 +1,20 @@
-import { LightningElement, wire, track } from 'lwc';
+import {LightningElement, track, wire} from 'lwc';
 import getAllProducts from '@salesforce/apex/ProductController.getAllProducts';
 import getAllFilteredProducts from '@salesforce/apex/ProductController.getAllFilteredProducts';
 
 const CART_STORAGE_KEY = 'cartProducts';
+const DEBOUNCE_DELAY = 1000;
 
 export default class OrderManagementPage extends LightningElement {
     searchQuery = '';
+    debounceTimeout;
+
     @track isModalOpen = false;
     @track isCartOpen = false;
+    @track isLoading = false;
     @track products = [];
     @track cartProducts = [];
+    @track selectedFilters = {};
 
     @wire(getAllProducts)
     wiredProducts({ error, data }) {
@@ -30,20 +35,35 @@ export default class OrderManagementPage extends LightningElement {
     }
 
     handleSearch(event) {
-        const searchQuery = event.detail.searchQuery;
-        const resultQuery = searchQuery
-            ? getAllFilteredProducts({ searchQuery })
-            : getAllProducts();
+        this.searchQuery = event.detail.searchQuery;
 
-        resultQuery
-            .then(result => {
-                this.products = result;
-                this.error = undefined;
-            })
-            .catch(error => {
-                this.error = error;
-                this.products = [];
-            });
+        clearTimeout(this.debounceTimeout);
+        this.debounceTimeout = setTimeout(() => {
+            this.fetchFilteredProducts();
+        }, DEBOUNCE_DELAY);
+    }
+
+    handleFilterChange(event) {
+        const { filterName, filterValue } = event.detail;
+        this.selectedFilters[filterName] = filterValue;
+        this.fetchFilteredProducts();
+    }
+
+    fetchFilteredProducts() {
+        this.isLoading = true;
+        const { searchQuery, selectedFilters } = this;
+        console.log('filters: ', selectedFilters)
+        console.log('type: ', selectedFilters['Type__c'])
+        try {
+            getAllFilteredProducts({searchQuery: searchQuery, filters: selectedFilters})
+                .then(result => {
+                    this.products = result;
+                    this.isLoading = false;
+                })
+                .catch(error => console.log(error));
+        } catch (error) {
+            console.log('the error: ', error)
+        }
     }
 
     handleProductDeleted(event) {

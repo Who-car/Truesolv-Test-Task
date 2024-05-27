@@ -6,6 +6,7 @@ import {ShowToastEvent} from "lightning/platformShowToastEvent";
 
 export default class ProductCardComponent extends LightningElement {
     @track isManager = false;
+    @track isLoading = true;
     @track data;
     @api
     get product() {
@@ -14,6 +15,7 @@ export default class ProductCardComponent extends LightningElement {
 
     set product(value) {
         this.data = {...value};
+        this.loadImage();
     }
 
     @wire(isCurrentUserManager)
@@ -25,14 +27,16 @@ export default class ProductCardComponent extends LightningElement {
         }
     }
 
-    async connectedCallback() {
+    async loadImage() {
         if (!this.data.Image__c) {
             fetchProductImage({productName: this.data.Name__c})
                 .then(result => {
                     this.data.Image__c = result;
-                    // this.template.querySelector('.product-image').src = result;
+                    this.isLoading = false;
                 })
                 .catch(error => console.log('error in js: ', error.toString()))
+        } else {
+            this.isLoading = false;
         }
     }
 

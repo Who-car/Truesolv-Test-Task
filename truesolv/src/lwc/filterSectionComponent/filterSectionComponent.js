@@ -4,25 +4,37 @@ import getPicklistValues from '@salesforce/apex/ProductController.getPicklistVal
 export default class FilterSectionComponent extends LightningElement {
     @track typeOptions = [];
     @track familyOptions = [];
-    @track selectedTypes = [];
-    @track selectedFamilies = [];
+    @track selectedType;
+    @track selectedFamily;
     @track error;
 
     @wire(getPicklistValues)
     wiredPicklistValues({ error, data }) {
         if (data) {
-            this.typeOptions = data.Type__c.map(value => ({ label: value, value: value }));
-            this.familyOptions = data.Family__c.map(value => ({ label: value, value: value }));
+            this.typeOptions = [{ label: 'None', value: '' }].concat(data.Type__c.map(value => ({ label: value, value: value })));
+            this.familyOptions = [{ label: 'None', value: '' }].concat(data.Family__c.map(value => ({ label: value, value: value })));
         } else if (error) {
             this.error = error;
         }
     }
 
     handleTypeChange(event) {
-        this.selectedTypes = [...this.selectedTypes, event.detail.value];
+        this.selectedType = event.detail.value;
+        this.dispatchEvent(
+            new CustomEvent('filterchange', {
+                detail: {
+                    filterName: 'Type__c',
+                    filterValue: this.selectedType
+                }}));
     }
 
     handleFamilyChange(event) {
-        this.selectedFamilies = [...this.selectedFamilies, event.detail.value];
+        this.selectedFamily = event.detail.value;
+        this.dispatchEvent(
+            new CustomEvent('filterchange', {
+                detail: {
+                    filterName: 'Family__c',
+                    filterValue: this.selectedFamily
+                }}));
     }
 }

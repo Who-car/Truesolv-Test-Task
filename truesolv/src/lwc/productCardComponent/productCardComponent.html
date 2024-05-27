@@ -1,7 +1,12 @@
 <template>
     <lightning-card class="slds-m-bottom_medium">
         <div class="slds-p-around_medium">
-            <img src={product.Image__c} alt={product.Image__c} class="product-image slds-m-bottom_small"/>
+            <template if:true={isLoading}>
+                <lightning-spinner alternative-text="Loading" size="small" class="spinner"></lightning-spinner>
+            </template>
+            <template if:false= {isLoading}>
+                <img src={product.Image__c} alt={product.Image__c} class="product-image slds-m-bottom_small"/>
+            </template>
             <h2 class="slds-text-heading_medium">{product.Name__c}</h2>
             <p>{product.Description__c}</p>
             <div class="slds-m-top_small">
