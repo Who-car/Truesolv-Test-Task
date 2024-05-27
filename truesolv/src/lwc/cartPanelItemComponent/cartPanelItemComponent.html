@@ -1,10 +1,18 @@
 <template>
-    <div class="slds-grid slds-wrap slds-gutters">
-        <div class="slds-col slds-size_3-of-4">
-            <p>{item.name}</p>
-            <p>{item.price}</p>
+    <div class="slds-grid slds-wrap slds-gutters slds-grid_align-spread slds-p-around_x-small slds-box slds-grid_vertical-align-center">
+        <div class="slds-col slds-size_2-of-5">
+            <p class="slds-text-heading_small">{item.Name__c}</p>
+            <p class="slds-truncate slds-text-body_small" title={item.Description__c}>{truncatedDescription}</p>
         </div>
-        <div class="slds-col slds-size_1-of-4">
+        <div class="slds-col slds-size_1-of-5 slds-text-align_right slds-text-color_success slds-align_absolute-center">
+            <p>{item.Price__c}</p>
+        </div>
+        <div class="slds-col slds-size_1-of-5 slds-grid slds-align_absolute-center">
+            <lightning-button-icon icon-name="utility:left" size="small" alternative-text="Decrease" onclick={handleDecreaseQuantity}></lightning-button-icon>
+            <lightning-input label="" type="number" value={quantity} min="1" class="quantity-input" disabled></lightning-input>
+            <lightning-button-icon icon-name="utility:right" size="small" alternative-text="Increase" onclick={handleIncreaseQuantity}></lightning-button-icon>
+        </div>
+        <div class="slds-col slds-size_1-of-5 slds-text-align_right slds-align_absolute-center">
             <button class="slds-button slds-button_icon slds-button_icon-border" title="Remove" onclick={handleRemove}>
                 <lightning-icon icon-name="utility:delete" alternative-text="Remove" size="small"></lightning-icon>
             </button>

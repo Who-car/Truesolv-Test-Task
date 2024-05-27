@@ -6,7 +6,7 @@
             <p>{product.Description__c}</p>
             <div class="slds-m-top_small">
                 <lightning-button label="Details" class="slds-m-right_x-small"></lightning-button>
-                <lightning-button label="Add to cart"></lightning-button>
+                <lightning-button label="Add to cart" onclick={handleAddToCart}></lightning-button>
 <!--                <template if:true={isManager}>-->
                     <lightning-button-icon icon-name="utility:delete" alternative-text="Delete" onclick={handleDelete} class="slds-m-left_x-small"></lightning-button-icon>
 <!--                </template>-->

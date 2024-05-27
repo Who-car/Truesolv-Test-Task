@@ -58,4 +58,8 @@ export default class ProductCardComponent extends LightningElement {
                 );
             });
     }
+
+    handleAddToCart() {
+        this.dispatchEvent(new CustomEvent('addtocart', {detail: {product: this.data}}))
+    }
 }

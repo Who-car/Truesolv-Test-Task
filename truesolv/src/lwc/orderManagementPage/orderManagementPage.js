@@ -7,7 +7,7 @@ const CART_STORAGE_KEY = 'cartProducts';
 export default class OrderManagementPage extends LightningElement {
     searchQuery = '';
     @track isModalOpen = false;
-    @track isCartOpen = true;
+    @track isCartOpen = false;
     @track products = [];
     @track cartProducts = [];
 
@@ -25,7 +25,7 @@ export default class OrderManagementPage extends LightningElement {
     connectedCallback() {
         const cachedCart = localStorage.getItem(CART_STORAGE_KEY);
         if (cachedCart) {
-            this.cartProducts = JSON.parse(cachedCart);
+            this.cartProducts = [...JSON.parse(cachedCart)];
         }
     }
 
@@ -71,13 +71,18 @@ export default class OrderManagementPage extends LightningElement {
     }
 
     handleAddToCart(event) {
-        this.cartProducts.push(event.detail.product);
+        this.cartProducts.push({product: event.detail.product, quantity: 1});
         this.saveCartToLocalStorage();
     }
 
-    handleRemoveFromCart(event) {
-        const productId = event.detail.productId;
-        this.cartProducts = this.cartProducts.filter(product => product.id !== productId);
+    handleCartChange(event) {
+        const newCart = event.detail.newCart;
+        this.cartProducts = [...newCart];
+        this.saveCartToLocalStorage();
+    }
+
+    handleCartClean() {
+        this.cartProducts.splice(0, this.cartProducts.length)
         this.saveCartToLocalStorage();
     }
 

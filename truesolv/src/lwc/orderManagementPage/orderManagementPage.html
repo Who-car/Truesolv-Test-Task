@@ -12,7 +12,11 @@
             <div class="slds-grid slds-wrap">
                 <template for:each={products} for:item="product">
                     <div key={product.Name__c} class="slds-col slds-size_1-of-2 slds-p-around_small">
-                        <c-product-card-component product={product} onproductdeleted={handleProductDeleted}></c-product-card-component>
+                        <c-product-card-component
+                                product={product}
+                                onproductdeleted={handleProductDeleted}
+                                onaddtocart={handleAddToCart}>
+                        </c-product-card-component>
                     </div>
                 </template>
             </div>
@@ -24,7 +28,11 @@
        <c-product-create-modal-component onclosemodal={closeModal}></c-product-create-modal-component>
     </template>
     <template if:true={isCartOpen}>
-        <!--TODO: Cart panel code goes in here-->
-        <c-cart-panel-component onclosecart={closeCart}></c-cart-panel-component>
+        <c-cart-panel-component
+                products={cartProducts}
+                onclosecart={closeCart}
+                oncartchange={handleCartChange}
+                oncheckoutsuccess={handleCartClean}>
+        </c-cart-panel-component>
     </template>
 </template>
