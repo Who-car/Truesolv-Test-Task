@@ -1,6 +1,6 @@
 import {api, LightningElement} from 'lwc';
 
-export default class CartPanelItemComponent extends LightningElement {
+export default class CartModalItemComponent extends LightningElement {
     @api quantity;
     @api item;
 
@@ -12,14 +12,13 @@ export default class CartPanelItemComponent extends LightningElement {
         return this.item.Description__c;
     }
 
-    handleRemove() {
+    handleRemoveFromCart() {
         this.dispatchEvent(new CustomEvent('removeitem', {
             detail: { itemId: this.item.Id }
         }));
     }
 
     handleDecreaseQuantity() {
-        console.log('Decreasing quantity for item:', this.item.Id);
         const quantity = Math.max(1, this.quantity - 1);
         this.dispatchEvent(new CustomEvent('updatequantity', {
             detail: { itemId: this.item.Id, quantity }
@@ -27,7 +26,6 @@ export default class CartPanelItemComponent extends LightningElement {
     }
 
     handleIncreaseQuantity() {
-        console.log('Increasing quantity for item:', this.item.Id);
         const quantity = this.quantity + 1;
         this.dispatchEvent(new CustomEvent('updatequantity', {
             detail: { itemId: this.item.Id, quantity }

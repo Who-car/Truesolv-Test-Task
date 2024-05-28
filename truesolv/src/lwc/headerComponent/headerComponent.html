@@ -8,9 +8,11 @@
                             <div class="slds-page-header__name">
                                 <div class="slds-page-header__name-title">
                                     <h1>
-                                        <template if:true={user}>
-                                            <span>{user.Name}</span>
-                                            <span class="slds-page-header__title slds-truncate" title="User ID: {user.Id}">ID: {user.Id}</span>
+                                        <template if:true={account}>
+                                            <span>{account.Name}</span>
+                                            <span class="slds-page-header__title slds-truncate">
+                                                Number: {account.AccountNumber}
+                                            </span>
                                         </template>
                                     </h1>
                                 </div>
@@ -21,7 +23,9 @@
                 <div class="slds-page-header__col-actions">
                     <div class="slds-page-header__controls">
                         <div class="slds-page-header__control">
-                            <lightning-button label="Create Product" class="slds-m-left_x-small" onclick={handleOpenModal}></lightning-button>
+<!--                            TODO: add "isManager check"-->
+<!--                            TODO: add mock products-->
+                            <lightning-button label="Create Product" class="slds-m-left_x-small" onclick={handleOpenProductCreateModal}></lightning-button>
                             <lightning-button label="Open Cart" class="slds-m-left_x-small" onclick={handleOpenCart}></lightning-button>
                         </div>
                     </div>

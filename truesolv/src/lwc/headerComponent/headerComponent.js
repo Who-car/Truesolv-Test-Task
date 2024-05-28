@@ -1,23 +1,27 @@
 import {LightningElement, api, wire} from 'lwc';
-import getCurrentUser from '@salesforce/apex/UserController.getCurrentUser';
+import getAccountInfo from '@salesforce/apex/UserController.getAccountInfo';
+import {ShowToastEvent} from "lightning/platformShowToastEvent";
 
 export default class HeaderComponent extends LightningElement {
-    user;
-    error;
+    account;
 
-    @wire(getCurrentUser)
+    @wire(getAccountInfo)
     wiredUser({ error, data }) {
         if (data) {
-            this.user = data;
-            this.error = undefined;
+            this.account = data;
         } else if (error) {
-            this.error = error;
-            this.user = undefined;
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: 'Authentication failed',
+                    message: error.body.toString(),
+                    variant: 'error'
+                })
+            );
         }
     }
 
-    handleOpenModal() {
-        this.dispatchEvent(new CustomEvent('openmodal'));
+    handleOpenProductCreateModal() {
+        this.dispatchEvent(new CustomEvent('openproductcreatemodal'));
     }
 
     handleOpenCart() {

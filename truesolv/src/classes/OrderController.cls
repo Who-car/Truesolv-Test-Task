@@ -1,11 +1,16 @@
 public with sharing class OrderController {
+    public class CartItemWrapper {
+        @AuraEnabled public Product__c product { get; set; }
+        @AuraEnabled public Integer quantity { get; set; }
+    }
+
     @AuraEnabled
     public static Id checkoutCart(List<CartItemWrapper> cartItems) {
         if (cartItems.isEmpty()) {
             throw new AuraHandledException('Cart is empty');
         }
 
-        Id accountId = UserController.getCurrentUserAccountId();
+        Id accountId = UserController.getAccountId();
         String orderName = 'Order №' + generateUniqueId() + '\n' + Date.today().toString();
 
         Order__c newOrder = new Order__c(
@@ -25,15 +30,9 @@ public with sharing class OrderController {
             );
             orderItems.add(orderItem);
         }
-
         insert orderItems;
 
         return newOrder.Id;
-    }
-
-    public class CartItemWrapper {
-        @AuraEnabled public Product__c product { get; set; }
-        @AuraEnabled public Integer quantity { get; set; }
     }
 
     private static String generateUniqueId() {

@@ -10,7 +10,7 @@
             </header>
 
             <div class="slds-modal__content slds-p-around_medium">
-                <lightning-input label="Name" value={newProduct.Name__c} onchange={handleInputChange} data-id="Name"></lightning-input>
+                <lightning-input label="Name" value={newProduct.Name__c} onchange={handleInputChange} data-id="Name__c"></lightning-input>
                 <lightning-input label="Description" value={newProduct.Description__c} onchange={handleInputChange} data-id="Description__c"></lightning-input>
                 <lightning-input label="Image" type="url" value={newProduct.Image__c} onchange={handleInputChange} data-id="Image__c"></lightning-input>
 
@@ -58,8 +58,9 @@
             </template>
 
             <footer class="slds-modal__footer">
+<!--                TODO: fix the gap-->
                 <lightning-button label="Cancel" onclick={handleCancel}></lightning-button>
-                <lightning-button variant="brand" label="Save" onclick={saveProduct}></lightning-button>
+                <lightning-button variant="brand" label="Save" onclick={handleProductSave}></lightning-button>
             </footer>
         </div>
     </section>

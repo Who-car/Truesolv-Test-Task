@@ -1,9 +1,9 @@
 import {LightningElement, api, track, wire} from 'lwc';
 import createProduct from '@salesforce/apex/ProductController.createProduct';
 import getPicklistValues from '@salesforce/apex/ProductController.getPicklistValues';
+import {ShowToastEvent} from "lightning/platformShowToastEvent";
 
 export default class ProductCreateModalComponent extends LightningElement {
-    @track error;
     @track typeOptions = [];
     @track familyOptions = [];
     @track newProduct = {
@@ -21,7 +21,13 @@ export default class ProductCreateModalComponent extends LightningElement {
             this.typeOptions = data.Type__c.map(value => ({ label: value, value: value }));
             this.familyOptions = data.Family__c.map(value => ({ label: value, value: value }));
         } else if (error) {
-            this.error = error;
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: 'Error parsing options',
+                    message: error.toString(),
+                    variant: 'error'
+                })
+            );
         }
     }
 
@@ -30,13 +36,9 @@ export default class ProductCreateModalComponent extends LightningElement {
         this.newProduct[field] = event.target.value;
     }
 
-    handleCancel() {
-        this.dispatchEvent(new CustomEvent('closemodal'));
-    }
-
-    saveProduct() {
+    handleProductSave() {
         createProduct({
-            name: this.newProduct.Name,
+            name: this.newProduct.Name__c,
             description: this.newProduct.Description__c,
             type: this.newProduct.Type__c,
             family: this.newProduct.Family__c,
@@ -44,13 +46,23 @@ export default class ProductCreateModalComponent extends LightningElement {
             image: this.newProduct.Image__c
         })
             .then(product => {
-                this.dispatchEvent(new CustomEvent('closemodal', { detail: product }));
+                this.dispatchEvent(new CustomEvent('closeproductcreatemodal', { detail: product }));
                 this.resetNewProduct();
             })
             .catch(error => {
-                this.error = error;
-                console.log(error)
+                this.dispatchEvent(
+                    new ShowToastEvent({
+                        title: 'Error creating product',
+                        message: error.toString(),
+                        variant: 'error'
+                    })
+                );
             });
+    }
+
+    handleCancel() {
+        this.resetNewProduct();
+        this.dispatchEvent(new CustomEvent('closeproductcreatemodal'));
     }
 
     resetNewProduct() {

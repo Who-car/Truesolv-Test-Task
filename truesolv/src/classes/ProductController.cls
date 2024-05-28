@@ -28,15 +28,12 @@ public class ProductController {
             query += ' WHERE ' + String.join(queryParts, ' AND ');
         }
 
-        System.debug('Final query: ' + query);
-
         return Database.query(query);
     }
 
 
     @AuraEnabled(Cacheable=true)
     public static String fetchProductImage(String productName) {
-        System.debug('executing fetch product');
         Http http = new Http();
         HttpRequest request = new HttpRequest();
         request.setEndpoint('http://www.glyffix.com/api/Image?word=' + EncodingUtil.urlEncode(productName, 'UTF-8'));
@@ -60,7 +57,10 @@ public class ProductController {
             System.debug('Error fetching product image: ' + e.getMessage());
         }
 
-        return 'https://yandex.ru/images/search?pos=0&from=tabbar&img_url=https%3A%2F%2Fexima-online.net%2Ftemplates%2FLiveCast%2Fdleimages%2Fno_image.jpg&text=no+image+png&rpt=simage&lr=43';
+        // fallback image
+//        TODO: unit tests
+//        TODO: create 3 more users: trututiu (isManager = true), iskander (isAdmin = true), sergey
+        return 'https://trcglobus.ru/uploads/no_image.png';
     }
 
     @AuraEnabled(Cacheable=true)

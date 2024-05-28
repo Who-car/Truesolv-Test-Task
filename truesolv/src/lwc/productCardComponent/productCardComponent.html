@@ -4,7 +4,7 @@
             <template if:true={isLoading}>
                 <lightning-spinner alternative-text="Loading" size="small" class="spinner"></lightning-spinner>
             </template>
-            <template if:false= {isLoading}>
+            <template if:false={isLoading}>
                 <img src={product.Image__c} alt={product.Image__c} class="product-image slds-m-bottom_small"/>
             </template>
             <h2 class="slds-text-heading_medium">{product.Name__c}</h2>
@@ -12,9 +12,9 @@
             <div class="slds-m-top_small">
                 <lightning-button label="Details" class="slds-m-right_x-small"></lightning-button>
                 <lightning-button label="Add to cart" onclick={handleAddToCart}></lightning-button>
-<!--                <template if:true={isManager}>-->
-                    <lightning-button-icon icon-name="utility:delete" alternative-text="Delete" onclick={handleDelete} class="slds-m-left_x-small"></lightning-button-icon>
-<!--                </template>-->
+                <template if:true= {isManager}>
+                    <lightning-button-icon icon-name="utility:delete" alternative-text="Delete" onclick={handleProductDelete} class="slds-m-left_x-small"></lightning-button-icon>
+                </template>
             </div>
         </div>
     </lightning-card>

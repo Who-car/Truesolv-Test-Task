@@ -1,13 +1,12 @@
 <template>
-    <!--TODO: настроить error везде-->
-    <c-header-component onopenmodal={openModal} onopencart={openCart}></c-header-component>
+    <c-header-component onopenproductcreatemodal={handleOpenProductCreateModal} onopencart={handleOpenCartModal}></c-header-component>
     <div class="slds-grid slds-gutters slds-wrap">
         <div class="slds-col slds-size_1-of-3 slds-p-around_medium slds-box">
             <c-filter-section-component onfilterchange={handleFilterChange}></c-filter-section-component>
         </div>
 
         <div class="slds-col slds-size_2-of-3 slds-p-around_medium slds-box">
-            <c-search-component onsearch={handleSearch}></c-search-component>
+            <c-search-component onsearch={handleSearchQueryChange}></c-search-component>
 
             <div class="slds-grid slds-wrap">
                 <template if:true={products.length}>
@@ -38,15 +37,15 @@
     </div>
 
 
-    <template if:true={isModalOpen}>
-       <c-product-create-modal-component onclosemodal={closeModal}></c-product-create-modal-component>
+    <template if:true={isProductCreateModalOpen}>
+       <c-product-create-modal-component oncloseproductcreatemodal={handleCloseProductCreateModal}></c-product-create-modal-component>
     </template>
-    <template if:true={isCartOpen}>
-        <c-cart-panel-component
+    <template if:true={isCartModalOpen}>
+        <c-cart-modal-component
                 products={cartProducts}
-                onclosecart={closeCart}
+                onclosecart={handleCloseCartModal}
                 oncartchange={handleCartChange}
                 oncheckoutsuccess={handleCartClean}>
-        </c-cart-panel-component>
+        </c-cart-modal-component>
     </template>
 </template>
