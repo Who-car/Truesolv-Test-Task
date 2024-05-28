@@ -58,7 +58,6 @@ public class ProductController {
         }
 
         // fallback image
-//        TODO: unit tests
 //        TODO: create 3 more users: trututiu (isManager = true), iskander (isAdmin = true), sergey
         return 'https://trcglobus.ru/uploads/no_image.png';
     }
