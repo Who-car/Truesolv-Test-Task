@@ -1,14 +1,16 @@
-import {LightningElement, api, wire} from 'lwc';
-import getAccountInfo from '@salesforce/apex/UserController.getAccountInfo';
+import {LightningElement, api, track, wire} from 'lwc';
 import {ShowToastEvent} from "lightning/platformShowToastEvent";
+import isCurrentUserManager from '@salesforce/apex/UserController.isCurrentUserManager';
 
 export default class HeaderComponent extends LightningElement {
-    account;
+    @api accountName;
+    @api accountNumber;
+    @track isManager;
 
-    @wire(getAccountInfo)
-    wiredUser({ error, data }) {
+    @wire(isCurrentUserManager)
+    wiredIsManager({ error, data }) {
         if (data) {
-            this.account = data;
+            this.isManager = data;
         } else if (error) {
             this.dispatchEvent(
                 new ShowToastEvent({
@@ -19,6 +21,7 @@ export default class HeaderComponent extends LightningElement {
             );
         }
     }
+
 
     handleOpenProductCreateModal() {
         this.dispatchEvent(new CustomEvent('openproductcreatemodal'));

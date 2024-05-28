@@ -1,12 +1,15 @@
-import {LightningElement, track, wire} from 'lwc';
+import {api, LightningElement, track, wire} from 'lwc';
+import { CurrentPageReference } from 'lightning/navigation';
 import getAllProducts from '@salesforce/apex/ProductController.getAllProducts';
 import getAllFilteredProducts from '@salesforce/apex/ProductController.getAllFilteredProducts';
 import {ShowToastEvent} from "lightning/platformShowToastEvent";
+import { getRecord, getFieldValue } from 'lightning/uiRecordApi';
+import ACCOUNT_NAME_FIELD from '@salesforce/schema/Account.Name';
+import ACCOUNT_NUMBER_FIELD from '@salesforce/schema/Account.AccountNumber';
 
 const CART_STORAGE_KEY = 'cartProducts';
 
 export default class OrderManagementPage extends LightningElement {
-    // TODO: Add Button to Account Layout
     @track isProductCreateModalOpen = false;
     @track isCartModalOpen = false;
     @track isLoading = false;
@@ -14,6 +17,36 @@ export default class OrderManagementPage extends LightningElement {
     @track cartProducts = [];
     @track selectedFilters = {};
     @track searchQuery = '';
+    @track accountName;
+    @track accountNumber;
+    @track currentPageReference;
+
+    // TODO: передавать в корзину
+    @api
+    get recordId() {
+        return this.currentPageReference?.state?.c__recordId;
+    }
+
+    @wire(CurrentPageReference)
+    setCurrentPageReference(currentPageReference) {
+        this.currentPageReference = currentPageReference;
+    }
+
+    @wire(getRecord, { recordId: '$recordId', fields: [ACCOUNT_NAME_FIELD, ACCOUNT_NUMBER_FIELD] })
+    wiredAccount({ error, data }) {
+        if (data) {
+            this.accountName = getFieldValue(data, ACCOUNT_NAME_FIELD);
+            this.accountNumber = getFieldValue(data, ACCOUNT_NUMBER_FIELD);
+        } else if (error) {
+            this.dispatchEvent(
+                new ShowToastEvent({
+                    title: 'Error fetching account',
+                    message: error.toString(),
+                    variant: 'error'
+                })
+            );
+        }
+    }
 
     @wire(getAllProducts)
     wiredProducts({ error, data }) {
@@ -68,7 +101,7 @@ export default class OrderManagementPage extends LightningElement {
     }
 
     handleCartClean() {
-        this.closeCart();
+        this.handleCloseCartModal();
         this.cartProducts.splice(0, this.cartProducts.length)
         this.saveCartToLocalStorage();
     }

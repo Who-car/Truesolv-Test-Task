@@ -5,20 +5,18 @@ public with sharing class OrderController {
     }
 
     @AuraEnabled
-    public static Id checkoutCart(List<CartItemWrapper> cartItems) {
+    public static Id checkoutCart(List<CartItemWrapper> cartItems, Id accountId) {
         if (cartItems.isEmpty()) {
             throw new AuraHandledException('Cart is empty');
         }
 
-        Id accountId = UserController.getAccountId();
         String orderName = 'Order №' + generateUniqueId() + '\n' + Date.today().toString();
-
         Order__c newOrder = new Order__c(
                 Name__c = orderName,
                 AccountId__c = accountId
         );
-        insert newOrder;
 
+        insert newOrder;
         List<OrderItem__c> orderItems = new List<OrderItem__c>();
 
         for (CartItemWrapper cartItem : cartItems) {

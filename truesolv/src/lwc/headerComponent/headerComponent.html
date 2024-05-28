@@ -8,11 +8,14 @@
                             <div class="slds-page-header__name">
                                 <div class="slds-page-header__name-title">
                                     <h1>
-                                        <template if:true={account}>
-                                            <span>{account.Name}</span>
+                                        <template if:true={accountName}>
+                                            <span>{accountName}</span>
                                             <span class="slds-page-header__title slds-truncate">
-                                                Number: {account.AccountNumber}
+                                                AccountNumber: {accountNumber}
                                             </span>
+                                        </template>
+                                        <template if:false={accountName}>
+                                            <span>No Account data</span>
                                         </template>
                                     </h1>
                                 </div>
@@ -23,9 +26,9 @@
                 <div class="slds-page-header__col-actions">
                     <div class="slds-page-header__controls">
                         <div class="slds-page-header__control">
-<!--                            TODO: add "isManager check"-->
-<!--                            TODO: add mock products-->
-                            <lightning-button label="Create Product" class="slds-m-left_x-small" onclick={handleOpenProductCreateModal}></lightning-button>
+                            <template if:true={isManager}>
+                                <lightning-button label="Create Product" class="slds-m-left_x-small" onclick={handleOpenProductCreateModal}></lightning-button>
+                            </template>
                             <lightning-button label="Open Cart" class="slds-m-left_x-small" onclick={handleOpenCart}></lightning-button>
                         </div>
                     </div>

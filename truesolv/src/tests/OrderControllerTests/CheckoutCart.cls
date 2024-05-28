@@ -34,7 +34,7 @@ public class CheckoutCart {
         List<OrderController.CartItemWrapper> cartItems = new List<OrderController.CartItemWrapper>{ item1, item2 };
 
         Test.startTest();
-        Id newOrderId = OrderController.checkoutCart(cartItems);
+        Id newOrderId = OrderController.checkoutCart(cartItems, testAccount.Id);
         Test.stopTest();
 
         Order__c newOrder = [SELECT Id, Name__c, AccountId__c FROM Order__c WHERE Id = :newOrderId];
@@ -47,12 +47,13 @@ public class CheckoutCart {
 
     @IsTest
     static void testCheckoutCartEmpty() {
+        Id accountId = '001Qy00000Lpaq9IAB';
         List<OrderController.CartItemWrapper> cartItems = new List<OrderController.CartItemWrapper>();
         AuraHandledException ex = new AuraHandledException('Cart is empty');
 
         try {
             Test.startTest();
-            OrderController.checkoutCart(cartItems);
+            OrderController.checkoutCart(cartItems, accountId);
             Test.stopTest();
             System.assert(false, 'Exception should have been thrown');
         } catch (AuraHandledException e) {

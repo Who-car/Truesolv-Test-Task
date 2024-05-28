@@ -5,17 +5,25 @@
                 <lightning-spinner alternative-text="Loading" size="small" class="spinner"></lightning-spinner>
             </template>
             <template if:false={isLoading}>
-                <img src={product.Image__c} alt={product.Image__c} class="product-image slds-m-bottom_small"/>
+                <img src={product.Image__c} alt={product.Name__c} class="product-image slds-m-bottom_small"/>
             </template>
             <h2 class="slds-text-heading_medium">{product.Name__c}</h2>
-            <p>{product.Description__c}</p>
+            <p class="description">{product.Description__c}</p>
             <div class="slds-m-top_small">
-                <lightning-button label="Details" class="slds-m-right_x-small"></lightning-button>
+                <lightning-button label="Details" class="slds-m-right_x-small" onclick={handleDetailsOpen}></lightning-button>
                 <lightning-button label="Add to cart" onclick={handleAddToCart}></lightning-button>
-                <template if:true= {isManager}>
+                <template if:true={isManager}>
                     <lightning-button-icon icon-name="utility:delete" alternative-text="Delete" onclick={handleProductDelete} class="slds-m-left_x-small"></lightning-button-icon>
                 </template>
             </div>
         </div>
     </lightning-card>
+
+    <template if:true={isDetailsModalOpen}>
+        <c-product-details-modal-component
+                product={product}
+                onaddtocart={handleAddToCart}
+                onclose={handleDetailsClose}>
+        </c-product-details-modal-component>
+    </template>
 </template>

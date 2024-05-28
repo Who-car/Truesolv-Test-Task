@@ -5,10 +5,9 @@ import fetchProductImage from '@salesforce/apex/ProductController.fetchProductIm
 import {ShowToastEvent} from "lightning/platformShowToastEvent";
 
 export default class ProductCardComponent extends LightningElement {
-    // TODO: Details modal window
-    // TODO: Toast notification when adding to cart
     @track isManager = false;
     @track isLoading = true;
+    @track isDetailsModalOpen = false;
     @track data;
 
     @api
@@ -84,5 +83,21 @@ export default class ProductCardComponent extends LightningElement {
         this.dispatchEvent(
             new CustomEvent('addtocart', {detail: {product: this.data}})
         );
+
+        this.dispatchEvent(
+            new ShowToastEvent({
+                title: 'Success',
+                message: 'Add \'' + this.data.Name__c + '\' to cart',
+                variant: 'success'
+            })
+        );
+    }
+
+    handleDetailsOpen() {
+        this.isDetailsModalOpen = true;
+    }
+
+    handleDetailsClose() {
+        this.isDetailsModalOpen = false;
     }
 }

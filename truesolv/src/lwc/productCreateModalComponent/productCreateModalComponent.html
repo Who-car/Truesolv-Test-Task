@@ -11,7 +11,7 @@
 
             <div class="slds-modal__content slds-p-around_medium">
                 <lightning-input label="Name" value={newProduct.Name__c} onchange={handleInputChange} data-id="Name__c"></lightning-input>
-                <lightning-input label="Description" value={newProduct.Description__c} onchange={handleInputChange} data-id="Description__c"></lightning-input>
+                <lightning-textarea label="Description" value={newProduct.Description__c} onchange={handleInputChange} data-id="Description__c"></lightning-textarea>
                 <lightning-input label="Image" type="url" value={newProduct.Image__c} onchange={handleInputChange} data-id="Image__c"></lightning-input>
 
                 <lightning-combobox
@@ -30,7 +30,7 @@
                         options={familyOptions}>
                 </lightning-combobox>
 
-                <lightning-input label="Price" type="number" value={newProduct.Price__c} onchange={handleInputChange} data-id="Price__c"></lightning-input>
+                <lightning-input label="Price" type="number" step="0.01" value={newProduct.Price__c} onchange={handleInputChange} data-id="Price__c"></lightning-input>
             </div>
 
             <template if:true={error}>
@@ -58,8 +58,7 @@
             </template>
 
             <footer class="slds-modal__footer">
-<!--                TODO: fix the gap-->
-                <lightning-button label="Cancel" onclick={handleCancel}></lightning-button>
+                <lightning-button class="slds-m-right_small" label="Cancel" onclick={handleCancel}></lightning-button>
                 <lightning-button variant="brand" label="Save" onclick={handleProductSave}></lightning-button>
             </footer>
         </div>

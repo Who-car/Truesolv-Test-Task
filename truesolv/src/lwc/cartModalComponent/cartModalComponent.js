@@ -5,6 +5,7 @@ import checkoutCart from '@salesforce/apex/OrderController.checkoutCart';
 
 export default class CartModalComponent extends NavigationMixin(LightningElement) {
     @track cartItems;
+    @api accountId;
 
     @api
     get products() {
@@ -38,7 +39,7 @@ export default class CartModalComponent extends NavigationMixin(LightningElement
     }
 
     handleCartCheckout() {
-        checkoutCart({ cartItems: this.cartItems })
+        checkoutCart({ cartItems: this.cartItems, accountId: this.accountId })
             .then(orderId => {
                 this.dispatchEvent(
                     new CustomEvent('checkoutsuccess')
@@ -52,7 +53,6 @@ export default class CartModalComponent extends NavigationMixin(LightningElement
                     })
                 );
 
-                // TODO: Fix "[NoErrorObjectAvailable]" Script error
                 this[NavigationMixin.Navigate]({
                     type: 'standard__recordPage',
                     attributes: {

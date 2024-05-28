@@ -1,0 +1,13 @@
+.product-image {
+    width: 150px;
+    height: 150px;
+    object-fit: cover;
+}
+
+.description {
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

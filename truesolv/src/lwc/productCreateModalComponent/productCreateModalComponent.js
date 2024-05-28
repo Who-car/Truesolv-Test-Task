@@ -50,10 +50,11 @@ export default class ProductCreateModalComponent extends LightningElement {
                 this.resetNewProduct();
             })
             .catch(error => {
+                console.log(error)
                 this.dispatchEvent(
                     new ShowToastEvent({
                         title: 'Error creating product',
-                        message: error.toString(),
+                        message: this.extractErrorMessage(error),
                         variant: 'error'
                     })
                 );
@@ -73,5 +74,17 @@ export default class ProductCreateModalComponent extends LightningElement {
             Family__c: '',
             Price__c: 0
         };
+    }
+
+    extractErrorMessage(error) {
+        if (error.body && error.body.fieldErrors) {
+            return Object.values(error.body.fieldErrors)
+                .map(fieldErrors => fieldErrors.map(e => e.message).join(', '))
+                .join(', ');
+        }
+        if (error.body && error.body.pageErrors) {
+            return error.body.pageErrors.map(e => e.message).join(', ');
+        }
+        return 'An unknown error occurred';
     }
 }

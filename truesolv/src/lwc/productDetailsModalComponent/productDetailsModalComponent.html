@@ -1,0 +1,31 @@
+<template>
+    <section role="dialog" tabindex="-1" class="slds-modal slds-fade-in-open">
+        <div class="slds-modal__container">
+            <header class="slds-modal__header">
+                <button class="slds-button slds-button_icon slds-modal__close slds-button_icon-inverse" title="Close" onclick={handleClose}>
+                    <lightning-icon icon-name="utility:close" alternative-text="Close"></lightning-icon>
+                    <span class="slds-assistive-text">Close</span>
+                </button>
+                <h2 class="slds-text-heading_medium">{product.Name__c}</h2>
+            </header>
+            <div class="slds-modal__content slds-p-around_medium">
+                <div class="slds-grid slds-wrap">
+                    <div class="slds-col slds-size_1-of-2">
+                        <img src={product.Image__c} alt={product.Name__c} class="product-image-large"/>
+                    </div>
+                    <div class="slds-col slds-size_1-of-2">
+                        <h2 class="slds-text-heading_large">{product.Name__c}</h2>
+                        <lightning-badge label={product.Type__c}></lightning-badge>
+                        <lightning-badge label={product.Family__c}></lightning-badge>
+                        <p class="slds-m-top_small">{product.Description__c}</p>
+                        <p class="slds-m-top_small slds-text-heading_medium">Price: {product.Price__c}</p>
+                        <lightning-button class="slds-m-top_small" label="Add to Cart" onclick={handleAddToCart}></lightning-button>
+                    </div>
+                </div>
+            </div>
+            <footer class="slds-modal__footer">
+                <lightning-button label="Close" onclick={handleClose}></lightning-button>
+            </footer>
+        </div>
+    </section>
+</template>
